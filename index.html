@@ -191,15 +191,6 @@
             transform: scale(1.05);
         }
         
-        .return-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            margin: 0;
-            padding: 8px 15px;
-            z-index: 100;
-        }
-        
         .page {
             display: none;
         }
@@ -230,7 +221,6 @@
     
     <!-- דף חטיבה 4 -->
     <div id="division-4-page" class="page">
-        <a class="return-button" onclick="showHomePage()">חזור</a>
         <h1>חטיבה 4</h1>
         <div class="container">
             <div class="info-grid">
@@ -265,7 +255,6 @@
     
     <!-- דף חטיבה 679 -->
     <div id="division-679-page" class="page">
-        <a class="return-button" onclick="showHomePage()">חזור</a>
         <h1>חטיבה 679</h1>
         <div class="container">
             <div class="info-grid">
@@ -300,80 +289,62 @@
     
     <!-- דפי תוכן לחטיבה 4 -->
     <div id="division-4-structure-page" class="page content-page">
-        <a class="return-button" onclick="showDivisionPage('division-4-page')">חזור</a>
         <h1>מבנה ארגוני - חטיבה 4</h1>
         <div class="container">
             <div class="content-container">
-                <textarea class="content-editor" placeholder="הכנס כאן את המידע על המבנה הארגוני של חטיבה 4"></textarea>
-                <button class="save-button" onclick="saveContent('division-4-structure')">שמור</button>
+                <div class="saved-content">חטיבה 4 היא חטיבת שריון סדירה בצה"ל, הידועה גם בכינויה "חטיבת קריתי". החטיבה כוללת מספר גדודי שריון וכפופה לאוגדה 36.</div>
             </div>
-            <div id="division-4-structure-content" class="saved-content"></div>
             <a class="back-button" onclick="showDivisionPage('division-4-page')">חזרה לדף חטיבה 4</a>
         </div>
     </div>
     
     <div id="division-4-knowledge-page" class="page content-page">
-        <a class="return-button" onclick="showDivisionPage('division-4-page')">חזור</a>
         <h1>מה אנחנו יודעים עד כה - חטיבה 4</h1>
         <div class="container">
             <div class="content-container">
-                <textarea class="content-editor" placeholder="הכנס כאן את המידע שנאסף עד כה על חטיבה 4"></textarea>
-                <button class="save-button" onclick="saveContent('division-4-knowledge')">שמור</button>
+                <div class="saved-content">חטיבה 4 השתתפה במבצעים רבים לאורך השנים, כולל מלחמת יום הכיפורים, מלחמת לבנון הראשונה, מבצע צוק איתן ועוד. החטיבה מצטיינת בלחימה מול כוחות שריון אויב ובתמרון מהיר.</div>
             </div>
-            <div id="division-4-knowledge-content" class="saved-content"></div>
             <a class="back-button" onclick="showDivisionPage('division-4-page')">חזרה לדף חטיבה 4</a>
         </div>
     </div>
     
     <div id="division-4-general-page" class="page content-page">
-        <a class="return-button" onclick="showDivisionPage('division-4-page')">חזור</a>
         <h1>מידע כללי - חטיבה 4</h1>
         <div class="container">
             <div class="content-container">
-                <textarea class="content-editor" placeholder="הכנס כאן מידע כללי על חטיבה 4"></textarea>
-                <button class="save-button" onclick="saveContent('division-4-general')">שמור</button>
+                <div class="saved-content">חטיבה 4 הוקמה בשנת 1954. בסיס האם של החטיבה הוא מחנה שיזפון שבנגב. החטיבה מפעילה טנקים מסוג מרכבה סימן 4. סמל החטיבה הוא ציור של אגרוף בצבע שחור.</div>
             </div>
-            <div id="division-4-general-content" class="saved-content"></div>
             <a class="back-button" onclick="showDivisionPage('division-4-page')">חזרה לדף חטיבה 4</a>
         </div>
     </div>
     
     <!-- דפי תוכן לחטיבה 679 -->
     <div id="division-679-structure-page" class="page content-page">
-        <a class="return-button" onclick="showDivisionPage('division-679-page')">חזור</a>
         <h1>מבנה ארגוני - חטיבה 679</h1>
         <div class="container">
             <div class="content-container">
-                <textarea class="content-editor" placeholder="הכנס כאן את המידע על המבנה הארגוני של חטיבה 679"></textarea>
-                <button class="save-button" onclick="saveContent('division-679-structure')">שמור</button>
+                <div class="saved-content">חטיבה 679 היא חטיבת שריון במילואים בצה"ל, הידועה גם בשם "חטיבת עוז". החטיבה כוללת מספר גדודי שריון וכפופה לעוצבת הפלדה.</div>
             </div>
-            <div id="division-679-structure-content" class="saved-content"></div>
             <a class="back-button" onclick="showDivisionPage('division-679-page')">חזרה לדף חטיבה 679</a>
         </div>
     </div>
     
     <div id="division-679-knowledge-page" class="page content-page">
-        <a class="return-button" onclick="showDivisionPage('division-679-page')">חזור</a>
         <h1>מה אנחנו יודעים עד כה - חטיבה 679</h1>
         <div class="container">
             <div class="content-container">
-                <textarea class="content-editor" placeholder="הכנס כאן את המידע שנאסף עד כה על חטיבה 679"></textarea>
-                <button class="save-button" onclick="saveContent('division-679-knowledge')">שמור</button>
+                <div class="saved-content">חטיבה 679 לקחה חלק בקרבות רבים לאורך ההיסטוריה של מדינת ישראל, כולל מלחמת יום הכיפורים, מלחמת לבנון הראשונה והשנייה. החטיבה מתאמנת באופן קבוע לשמירה על כשירות מבצעית גבוהה.</div>
             </div>
-            <div id="division-679-knowledge-content" class="saved-content"></div>
             <a class="back-button" onclick="showDivisionPage('division-679-page')">חזרה לדף חטיבה 679</a>
         </div>
     </div>
     
     <div id="division-679-general-page" class="page content-page">
-        <a class="return-button" onclick="showDivisionPage('division-679-page')">חזור</a>
         <h1>מידע כללי - חטיבה 679</h1>
         <div class="container">
             <div class="content-container">
-                <textarea class="content-editor" placeholder="הכנס כאן מידע כללי על חטיבה 679"></textarea>
-                <button class="save-button" onclick="saveContent('division-679-general')">שמור</button>
+                <div class="saved-content">חטיבה 679 הוקמה בשנת 1968 והפכה לחטיבת מילואים בשנות ה-90. החטיבה מפעילה טנקים מסוג מרכבה סימן 3. סמל החטיבה הוא ציור של חרב וכנפיים בצבע אדום.</div>
             </div>
-            <div id="division-679-general-content" class="saved-content"></div>
             <a class="back-button" onclick="showDivisionPage('division-679-page')">חזרה לדף חטיבה 679</a>
         </div>
     </div>
@@ -417,47 +388,6 @@
             // גלול לראש הדף
             window.scrollTo(0, 0);
         }
-        
-        function saveContent(contentId) {
-            // קבל את הטקסט מתיבת הטקסט
-            const pageId = contentId.includes('4') ? 
-                `division-4-${contentId.split('-').pop()}-page` : 
-                `division-679-${contentId.split('-').pop()}-page`;
-            const textarea = document.querySelector(`#${pageId} .content-editor`);
-            const text = textarea.value;
-            
-            // הצג את הטקסט באזור התוכן השמור
-            const contentElement = document.getElementById(contentId + '-content');
-            
-            // שמור את הטקסט עם פורמט
-            contentElement.innerHTML = text.replace(/\n/g, '<br>');
-            
-            // הצג הודעת אישור
-            alert('התוכן נשמר בהצלחה!');
-            
-            // נקה את תיבת הטקסט
-            textarea.value = '';
-        }
-        
-        // טען תוכן שמור בעת טעינת הדף (אם קיים)
-        window.onload = function() {
-            // לכל אזור תוכן, בדוק אם יש תוכן בלוקל סטורג'
-            const contentIds = [
-                'division-4-structure', 
-                'division-4-knowledge', 
-                'division-4-general',
-                'division-679-structure', 
-                'division-679-knowledge', 
-                'division-679-general'
-            ];
-            
-            contentIds.forEach(id => {
-                const savedContent = localStorage.getItem(id);
-                if (savedContent) {
-                    document.getElementById(id + '-content').innerHTML = savedContent;
-                }
-            });
-        };
     </script>
 </body>
 </html>
