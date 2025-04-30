@@ -74,10 +74,13 @@
         }
         
         .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            flex-direction: column;
             gap: 20px;
             margin-top: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .info-box {
@@ -241,12 +244,6 @@
                     <div class="info-title">מה אנחנו יודעים עד כה</div>
                     <div class="info-content">מידע שנאסף עד כה על חטיבה 4</div>
                 </div>
-                
-                <!-- ריבוע 4 - כללי -->
-                <div class="info-box" onclick="showContentPage('division-4-general-page')">
-                    <div class="info-title">כללי</div>
-                    <div class="info-content">מידע כללי על חטיבה 4</div>
-                </div>
             </div>
             
             <a class="back-button" onclick="showHomePage()">חזרה לדף הבית</a>
@@ -275,12 +272,6 @@
                     <div class="info-title">מה אנחנו יודעים עד כה</div>
                     <div class="info-content">מידע שנאסף עד כה על חטיבה 679</div>
                 </div>
-                
-                <!-- ריבוע 4 - כללי -->
-                <div class="info-box" onclick="showContentPage('division-679-general-page')">
-                    <div class="info-title">כללי</div>
-                    <div class="info-content">מידע כללי על חטיבה 679</div>
-                </div>
             </div>
             
             <a class="back-button" onclick="showHomePage()">חזרה לדף הבית</a>
@@ -308,16 +299,6 @@
         </div>
     </div>
     
-    <div id="division-4-general-page" class="page content-page">
-        <h1>מידע כללי - חטיבה 4</h1>
-        <div class="container">
-            <div class="content-container">
-                <div class="saved-content">חטיבה 4 הוקמה בשנת 1954. בסיס האם של החטיבה הוא מחנה שיזפון שבנגב. החטיבה מפעילה טנקים מסוג מרכבה סימן 4. סמל החטיבה הוא ציור של אגרוף בצבע שחור.</div>
-            </div>
-            <a class="back-button" onclick="showDivisionPage('division-4-page')">חזרה לדף חטיבה 4</a>
-        </div>
-    </div>
-    
     <!-- דפי תוכן לחטיבה 679 -->
     <div id="division-679-structure-page" class="page content-page">
         <h1>מבנה ארגוני - חטיבה 679</h1>
@@ -334,16 +315,6 @@
         <div class="container">
             <div class="content-container">
                 <div class="saved-content">חטיבה 679 לקחה חלק בקרבות רבים לאורך ההיסטוריה של מדינת ישראל, כולל מלחמת יום הכיפורים, מלחמת לבנון הראשונה והשנייה. החטיבה מתאמנת באופן קבוע לשמירה על כשירות מבצעית גבוהה.</div>
-            </div>
-            <a class="back-button" onclick="showDivisionPage('division-679-page')">חזרה לדף חטיבה 679</a>
-        </div>
-    </div>
-    
-    <div id="division-679-general-page" class="page content-page">
-        <h1>מידע כללי - חטיבה 679</h1>
-        <div class="container">
-            <div class="content-container">
-                <div class="saved-content">חטיבה 679 הוקמה בשנת 1968 והפכה לחטיבת מילואים בשנות ה-90. החטיבה מפעילה טנקים מסוג מרכבה סימן 3. סמל החטיבה הוא ציור של חרב וכנפיים בצבע אדום.</div>
             </div>
             <a class="back-button" onclick="showDivisionPage('division-679-page')">חזרה לדף חטיבה 679</a>
         </div>
