@@ -1,331 +1,186 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="he">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>חטיבות צה"ל</title>
+<!doctype html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-        :root {
-            /* פלטת צבעים צבאית */
-            --military-green-dark: #2D3E1F;
-            --military-green: #485a3a;
-            --military-green-light: #708557;
-            --military-sand: #C3B091;
-            --military-brown: #57483B;
-            --military-gray: #5A5A5A;
-            --military-black: #232323;
-            --military-tan: #A59476;
-            --military-khaki: #B9B27D;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--military-khaki);
-            text-align: center;
-            color: var(--military-black);
-        }
-        
-        h1 {
-            color: var(--military-green-dark);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-            font-weight: bold;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        .division-box {
-            border: 3px solid var(--military-green-dark);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            padding: 30px;
-            background-color: var(--military-tan);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .division-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            background-color: var(--military-green-light);
-        }
-        
-        .logo {
-            width: 150px;
-            height: 150px;
-            object-fit: contain;
-            margin-bottom: 15px;
-            background-color: var(--military-sand);
-            border-radius: 50%;
-            padding: 10px;
-            border: 2px solid var(--military-green-dark);
-        }
-        
-        .division-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--military-green-dark);
-            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-        }
-        
-        .info-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-top: 30px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .info-box {
-            border: 3px solid var(--military-green-dark);
-            border-radius: 10px;
-            padding: 20px;
-            background-color: var(--military-tan);
-            min-height: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s;
-            cursor: pointer;
-        }
-        
-        .info-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-            background-color: var(--military-green-light);
-            color: white;
-        }
-        
-        .content-page .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .content-container {
-            width: 100%;
-            max-width: 800px;
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .content-editor {
-            width: 100%;
-            min-height: 200px;
-            padding: 15px;
-            border: 2px solid var(--military-green-dark);
-            border-radius: 10px;
-            background-color: var(--military-sand);
-            color: var(--military-black);
-            font-family: inherit;
-            font-size: 16px;
-            resize: vertical;
-            direction: rtl;
-        }
-        
-        .info-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--military-green-dark);
-            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-        }
-        
-        .info-content {
-            color: var(--military-black);
-        }
-        
-        .back-button, .return-button {
-            display: inline-block;
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: var(--military-green-dark);
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            border: 2px solid var(--military-green);
-            transition: all 0.2s;
-            font-weight: bold;
-        }
-        
-        .back-button:hover, .return-button:hover {
-            background-color: var(--military-green);
-            transform: scale(1.05);
-        }
-        
-        .page {
-            display: none;
-        }
-        
-        #home-page {
-            display: block;
-        }
+      body { font-family: Arial, sans-serif; margin: 16px; max-width: 900px; }
+      h1 { font-size: 20px; margin: 0 0 8px; }
+      .note { color: #444; margin: 0 0 16px; }
+      .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin: 12px 0; }
+      label { display: block; margin: 8px 0 4px; }
+      input { width: 100%; padding: 10px; box-sizing: border-box; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: right; }
+      th { background: #fafafa; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .btn { padding: 10px 12px; border: 0; border-radius: 10px; cursor: pointer; }
+      .btnPrimary { background: #111; color: #fff; }
+      .btnGhost { background: #f2f2f2; }
+      .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+      .muted { color: #666; font-size: 13px; }
+      .err { color: #b00020; }
+      .ok { color: #0b7a0b; }
+      .qty { width: 90px; }
+      .ltr { direction: ltr; }
     </style>
-</head>
-<body>
-    <!-- דף הבית -->
-    <div id="home-page" class="page">
-        <h1>חטיבות צוות פרידמן</h1>
-        <div class="container">
-            <!-- מלבן 1 - חטיבה 4 -->
-            <div class="division-box" onclick="showDivisionPage('division-4-page')">
-                <img src="לוגו קרייתי.png" alt="סמל חטיבה 4" class="logo">
-                <div class="division-title">חטיבה 4</div>
-            </div>
-            
-            <!-- מלבן 2 - חטיבה 679 -->
-            <div class="division-box" onclick="showDivisionPage('division-679-page')">
-                <img src="חטיבה 679.png" alt="סמל חטיבה 679" class="logo">
-                <div class="division-title">חטיבה 679</div>
-            </div>
+  </head>
+  <body dir="rtl">
+    <h1>שיבוץ הבאת אוכל – משפחת "ישראלי" (09.01.2026)</h1>
+    <p class="note">בחר/י פריטים להתחייבות. המלאי מתעדכן בזמן אמת – פריט שאזל לא יופיע.</p>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>שם מלא *</label>
+          <input id="name" placeholder="לדוגמה: יובל פרידמן" />
         </div>
-    </div>
-    
-    <!-- דף חטיבה 4 -->
-    <div id="division-4-page" class="page">
-        <h1>חטיבה 4</h1>
-        <div class="container">
-            <div class="info-grid">
-                <!-- ריבוע 1 - ויקיפדיה -->
-                <div class="info-box" onclick="window.open('https://he.wikipedia.org/wiki/חטיבה_4', '_blank')">
-                    <div class="info-title">מידע מויקיפדיה על חטיבה 4</div>
-                </div>
-                
-                <!-- ריבוע 2 - מבנה ארגוני -->
-                <div class="info-box" onclick="showContentPage('division-4-structure-page')">
-                    <div class="info-title">מבנה ארגוני</div>
-                </div>
-                
-                <!-- ריבוע 3 - מה אנחנו יודעים עד כה -->
-                <div class="info-box" onclick="showContentPage('division-4-knowledge-page')">
-                    <div class="info-title">סטאטוס עדכני</div>
-                </div>
-            </div>
-            
-            <a class="back-button" onclick="showHomePage()">חזרה לדף הבית</a>
+        <div>
+          <label>טלפון (אופציונלי)</label>
+          <input id="phone" class="ltr" placeholder="05x-xxxxxxx" />
         </div>
+      </div>
     </div>
-    
-    <!-- דף חטיבה 679 -->
-    <div id="division-679-page" class="page">
-        <h1>חטיבה 679</h1>
-        <div class="container">
-            <div class="info-grid">
-                <!-- ריבוע 1 - ויקיפדיה -->
-                <div class="info-box" onclick="window.open('https://he.wikipedia.org/wiki/חטיבה_679', '_blank')">
-                    <div class="info-title">מידע מויקיפדיה על חטיבה 679</div>
-                </div>
-                
-                <!-- ריבוע 2 - מבנה ארגוני -->
-                <div class="info-box" onclick="showContentPage('division-679-structure-page')">
-                    <div class="info-title">מבנה ארגוני</div>
-                </div>
-                
-                <!-- ריבוע 3 - מה אנחנו יודעים עד כה -->
-                <div class="info-box" onclick="showContentPage('division-679-knowledge-page')">
-                    <div class="info-title">סטאטוס עדכני</div>
-                </div>
-            </div>
-            
-            <a class="back-button" onclick="showHomePage()">חזרה לדף הבית</a>
-        </div>
+
+    <div class="card">
+      <div class="actions">
+        <button class="btn btnGhost" onclick="reload()">רענון רשימה</button>
+        <button class="btn btnPrimary" onclick="submit()">שליחה</button>
+      </div>
+      <p id="status" class="muted"></p>
     </div>
-    
-    <!-- דפי תוכן לחטיבה 4 -->
-    <div id="division-4-structure-page" class="page content-page">
-        <h1>מבנה ארגוני - חטיבה 4</h1>
-        <div class="container">
-            <div class="content-container">
-                <div class="saved-content">לחטיבה 5 גדודים: 3 גדודי שיריון, גדוד הנדסה וגדסם. בנוסף, יש פלוגת מלר (מלך האחריות) פלסר ומפחט</div>
-            </div>  
-            <a class="back-button" onclick="showDivisionPage('division-4-page')">חזרה לדף חטיבה 4</a>
-        </div>
+
+    <div class="card">
+      <h2 style="font-size:16px; margin:0 0 8px;">פריטים זמינים</h2>
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>פריט</th>
+              <th>נותר</th>
+              <th>יחידה</th>
+              <th>כמות להתחייבות</th>
+            </tr>
+          </thead>
+          <tbody id="itemsBody"></tbody>
+        </table>
+      </div>
+      <p class="muted">טיפ: אם נשאר 1 ואת/ה לוקח/ת 1 – אחרי השליחה הפריט ייעלם מהרשימה.</p>
     </div>
-    
-    <div id="division-4-knowledge-page" class="page content-page">
-        <h1>מה אנחנו יודעים עד כה - חטיבה 4</h1>
-        <div class="container">
-            <div class="content-container">
-                <div class="text-align: right;">התקיימה פגישה עם יועץ הארגוני של החטיבה (דור) ## ב 5.5 התקיים יום התנעה לנושא קהילתיות וקהילה דיגטלית. הצגנו את פק"ל כולל העברת יחידת קשרים.הקב"ן (דניאל אופק) שמבין המון בנושא קהילתיות מהאזרחות (בחברה למתנסים) דיבר על קהילתיות באופן כללי. קיימו דיון פתוח בנושא צרכים ופערים ובנוסף, יוצגו התהליכים הנוכחיים אשר מתקיימים בהיבט של הקמת הקהילה הדיגיטלית. במפגש נכחו 2 מנחי פק"ל (איילת מועטי מהעורף - מתפקדת כקצינת עורף באחד הגדודים ורועי קרליבך שבעברו היה מנחה - מתפקד כסמגד בחטיבה). היה יום מצוין, חטיבה ברמה גבוהה</div>
-                <hr>
-                <div style="font-weight:600; text-align: right;">סטאטוס עדכני: תיאום פגישה עם המחט##</div>
-            </div>
-            <a class="back-button" onclick="showDivisionPage('division-4-page')">חזרה לדף חטיבה 4</a>
-        </div>
+
+    <div class="card">
+      <h2 style="font-size:16px; margin:0 0 8px;">הורדת שיבוצים</h2>
+      <div class="actions">
+        <button class="btn btnGhost" onclick="downloadXlsx()">Excel</button>
+        <button class="btn btnGhost" onclick="downloadPdf()">PDF</button>
+      </div>
+      <p class="muted">הקבצים נוצרים כקובץ חדש ב-Drive ומוחזר קישור להורדה.</p>
+      <p id="dl" class="muted"></p>
     </div>
-    
-    <!-- דפי תוכן לחטיבה 679 -->
-    <div id="division-679-structure-page" class="page content-page">
-        <h1>מבנה ארגוני - חטיבה 679</h1>
-        <div class="container">
-            <div class="content-container">
-                <div class="saved-content">בחטיבה 5 גדודים: 3 גדודי שריון, גדוד הנדסה וגדוד פלסם. בנוסף, פלוגת מלר (מלך האריות), פלסר, פלחיק ומפחט</div>
-            </div>
-            <a class="back-button" onclick="showDivisionPage('division-679-page')">חזרה לדף חטיבה 679</a>
-        </div>
-    </div>
-    
-    <div id="division-679-knowledge-page" class="page content-page">
-        <h1>מה אנחנו יודעים עד כה - חטיבה 679</h1>
-        <div class="container">
-            <div class="content-container">
-                <div class="saved-content">התקיימה פגישה עם היועץ הארגוני (אבישי) ## סטאטוס עדכני: תיאום פגישה עם המחט </div>
-            </div>
-            <a class="back-button" onclick="showDivisionPage('division-679-page')">חזרה לדף חטיבה 679</a>
-        </div>
-    </div>
-    
+
     <script>
-        function showDivisionPage(pageId) {
-            // הסתר את כל הדפים
-            document.querySelectorAll('.page').forEach(page => {
-                page.style.display = 'none';
-            });
-            
-            // הצג את הדף הרצוי
-            document.getElementById(pageId).style.display = 'block';
-            
-            // גלול לראש הדף
-            window.scrollTo(0, 0);
+      let currentItems = [];
+
+      function setStatus(msg, kind) {
+        const el = document.getElementById("status");
+        el.className = (kind === "err") ? "err" : (kind === "ok" ? "ok" : "muted");
+        el.textContent = msg || "";
+      }
+
+      function render(items) {
+        const body = document.getElementById("itemsBody");
+        body.innerHTML = "";
+        currentItems = items;
+
+        for (const it of items) {
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${escapeHtml(it.itemName)}</td>
+            <td>${it.remainingQty}</td>
+            <td>${escapeHtml(it.unit || "")}</td>
+            <td>
+              <input class="qty ltr" type="number" min="0" step="1"
+                     max="${it.remainingQty}" data-itemid="${it.itemId}"
+                     placeholder="0" />
+            </td>
+          `;
+          body.appendChild(tr);
         }
-        
-        function showHomePage() {
-            // הסתר את כל הדפים
-            document.querySelectorAll('.page').forEach(page => {
-                page.style.display = 'none';
-            });
-            
-            // הצג את דף הבית
-            document.getElementById('home-page').style.display = 'block';
-            
-            // גלול לראש הדף
-            window.scrollTo(0, 0);
+
+        setStatus(`נטענו ${items.length} פריטים זמינים.`, "ok");
+      }
+
+      function reload() {
+        setStatus("טוען פריטים…");
+        google.script.run
+          .withSuccessHandler(render)
+          .withFailureHandler(err => setStatus(err.message || String(err), "err"))
+          .getAvailableItems();
+      }
+
+      function submit() {
+        const name = document.getElementById("name").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+
+        const inputs = [...document.querySelectorAll("input[data-itemid]")];
+        const selections = inputs
+          .map(inp => ({ itemId: inp.dataset.itemid, qty: Number(inp.value) }))
+          .filter(x => Number.isFinite(x.qty) && x.qty > 0);
+
+        if (!name) return setStatus("חובה למלא שם מלא.", "err");
+        if (selections.length === 0) return setStatus("בחר/י לפחות פריט אחד עם כמות גדולה מ-0.", "err");
+
+        // client-side max check
+        for (const s of selections) {
+          const it = currentItems.find(x => x.itemId === s.itemId);
+          if (it && s.qty > it.remainingQty) {
+            return setStatus(`הכמות שבחרת גדולה מהמלאי שנותר עבור "${it.itemName}".`, "err");
+          }
         }
-        
-        function showContentPage(pageId) {
-            // הסתר את כל הדפים
-            document.querySelectorAll('.page').forEach(page => {
-                page.style.display = 'none';
-            });
-            
-            // הצג את דף התוכן הרצוי
-            document.getElementById(pageId).style.display = 'block';
-            
-            // גלול לראש הדף
-            window.scrollTo(0, 0);
-        }
+
+        setStatus("שולח…");
+        google.script.run
+          .withSuccessHandler(() => {
+            setStatus("נקלט בהצלחה! הרשימה תתרענן.", "ok");
+            reload();
+          })
+          .withFailureHandler(err => setStatus(err.message || String(err), "err"))
+          .submitAssignment({ name, phone, selections });
+      }
+
+      function downloadXlsx() {
+        document.getElementById("dl").textContent = "מכין קובץ Excel…";
+        google.script.run
+          .withSuccessHandler(res => {
+            document.getElementById("dl").innerHTML = `Excel מוכן: <a href="${res.url}" target="_blank">פתח/י</a>`;
+          })
+          .withFailureHandler(err => {
+            document.getElementById("dl").textContent = "שגיאה: " + (err.message || String(err));
+          })
+          .exportAssignmentsXlsx();
+      }
+
+      function downloadPdf() {
+        document.getElementById("dl").textContent = "מכין PDF…";
+        google.script.run
+          .withSuccessHandler(res => {
+            document.getElementById("dl").innerHTML = `PDF מוכן: <a href="${res.url}" target="_blank">פתח/י</a>`;
+          })
+          .withFailureHandler(err => {
+            document.getElementById("dl").textContent = "שגיאה: " + (err.message || String(err));
+          })
+          .exportAssignmentsPdf();
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({
+          "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+        }[c]));
+      }
+
+      reload();
     </script>
-</body>
+  </body>
 </html>
