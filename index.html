@@ -1,186 +1,403 @@
-<!doctype html>
+const SHEET_ITEMS = "Items";
+const SHEET_ASSIGN = "Assignments";
+
+/**
+ * Run ONCE to create/update sheets + load your items list.
+ */
+function setupItems() {
+  const ss = SpreadsheetApp.getActive();
+
+  const shItems = ss.getSheetByName(SHEET_ITEMS) || ss.insertSheet(SHEET_ITEMS);
+  const shAssign = ss.getSheetByName(SHEET_ASSIGN) || ss.insertSheet(SHEET_ASSIGN);
+
+  // Headers
+  shItems.clear();
+  shItems.getRange(1, 1, 1, 5).setValues([["ItemID", "ItemName", "TotalQty", "RemainingQty", "Unit"]]);
+
+  shAssign.clear();
+  shAssign.getRange(1, 1, 1, 7).setValues([["Timestamp", "Name", "Phone", "ItemID", "ItemName", "Qty", "Unit"]]);
+
+  // Items (your list). Note: "טפנד, ופסטו ומטבלים" had no qty -> default 1 set.
+  const items = [
+    ["1",  "קיש / פיצה/ פשטידה/ מאפה",                 14, 14, "יח'"],
+    ["2",  "פשטידה ללא גלוטן",                         1,  1,  "יח'"],
+    ["3",  "פשטידה טבעונית",                           1,  1,  "יח'"],
+    ["4",  "סלט ירקות",                                 3,  3,  "קערה"],
+    ["5",  "סלט חסה",                                   3,  3,  "קערה"],
+    ["6",  "סלט כרוב",                                  2,  2,  "קערה"],
+    ["7",  "סלט טבולה",                                 2,  2,  "קערה"],
+    ["8",  "סלט סלק",                                   2,  2,  "קערה"],
+    ["9",  "סלט חצילים",                                3,  3,  "קערה"],
+    ["10", "סלט אבוקדו",                                2,  2,  "קערה"],
+    ["11", "סלט עוף",                                   1,  1,  "קערה"],
+    ["12", "סלט יצירתי",                                5,  5,  "קערה"],
+    ["13", "מגש ירקות חתוכים",                          2,  2,  "מגש"],
+    ["14", "מגש גבינות חתוך",                           5,  5,  "מגש"],
+    ["15", "חמאה",                                       2,  2,  "יח'"],
+    ["16", "לחם מחמצת חצי כמות פרוס.",                  9,  9,  "יח'"],
+    ["17", "פיתות קטנות",                               40, 40, "יח'"],
+    ["18", "קילו טחינה",                                 1,  1,  "ק\"ג"],
+    ["19", "קילו חומוס ביתי",                            2,  2,  "ק\"ג"],
+    ["20", "טפנד, ופסטו ומטבלים",                        1,  1,  "סט"],
+    ["21", "קערת פיצוחים",                               3,  3,  "קערה"],
+    ["22", "סלסילת תמרים ופרות יבשים",                   3,  3,  "סלסילה"],
+    ["23", "מגש פרות העונה.",                            3,  3,  "מגש"],
+    ["24", "עוגה",                                       7,  7,  "יח'"],
+    ["25", "עוגה ללא גלוטן",                             1,  1,  "יח'"],
+    ["26", "קופסת עוגיות",                               4,  4,  "קופסה"],
+    ["27", "קרמבו",                                      40, 40, "יח'"],
+    ["28", "בקבוק יין",                                   6,  6,  "בקבוק"],
+    ["29", "תרכיז לימונדה טבעי ל60 איש",                 1,  1,  "יח'"]
+  ];
+
+  shItems.getRange(2, 1, items.length, 5).setValues(items);
+
+  shItems.setFrozenRows(1);
+  shAssign.setFrozenRows(1);
+  shItems.autoResizeColumns(1, 5);
+  shAssign.autoResizeColumns(1, 7);
+}
+
+/**
+ * WEB APP ENTRY
+ */
+function doGet() {
+  const html = `<!doctype html>
 <html>
-  <head>
-    <base target="_top">
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body { font-family: Arial, sans-serif; margin: 16px; max-width: 900px; }
-      h1 { font-size: 20px; margin: 0 0 8px; }
-      .note { color: #444; margin: 0 0 16px; }
-      .card { border: 1px solid #ddd; border-radius: 10px; padding: 12px; margin: 12px 0; }
-      label { display: block; margin: 8px 0 4px; }
-      input { width: 100%; padding: 10px; box-sizing: border-box; }
-      table { width: 100%; border-collapse: collapse; }
-      th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: right; }
-      th { background: #fafafa; }
-      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-      .btn { padding: 10px 12px; border: 0; border-radius: 10px; cursor: pointer; }
-      .btnPrimary { background: #111; color: #fff; }
-      .btnGhost { background: #f2f2f2; }
-      .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-      .muted { color: #666; font-size: 13px; }
-      .err { color: #b00020; }
-      .ok { color: #0b7a0b; }
-      .qty { width: 90px; }
-      .ltr { direction: ltr; }
-    </style>
-  </head>
-  <body dir="rtl">
-    <h1>שיבוץ הבאת אוכל – משפחת "ישראלי" (09.01.2026)</h1>
-    <p class="note">בחר/י פריטים להתחייבות. המלאי מתעדכן בזמן אמת – פריט שאזל לא יופיע.</p>
+<head>
+  <base target="_top">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 16px; max-width: 980px; }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    .note { color: #444; margin: 0 0 16px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 12px; margin: 12px 0; }
+    label { display: block; margin: 8px 0 4px; }
+    input { width: 100%; padding: 10px; box-sizing: border-box; border:1px solid #ddd; border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: right; }
+    th { background: #fafafa; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn { padding: 10px 12px; border: 0; border-radius: 10px; cursor: pointer; }
+    .btnPrimary { background: #111; color: #fff; }
+    .btnGhost { background: #f2f2f2; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .muted { color: #666; font-size: 13px; }
+    .err { color: #b00020; }
+    .ok { color: #0b7a0b; }
+    .qty { width: 100px; }
+    .ltr { direction: ltr; }
+  </style>
+</head>
 
-    <div class="card">
-      <div class="row">
-        <div>
-          <label>שם מלא *</label>
-          <input id="name" placeholder="לדוגמה: יובל פרידמן" />
-        </div>
-        <div>
-          <label>טלפון (אופציונלי)</label>
-          <input id="phone" class="ltr" placeholder="05x-xxxxxxx" />
-        </div>
+<body dir="rtl">
+  <h1>שיבוץ הבאת אוכל – משפחת "ישראלי" (09.01.2026)</h1>
+  <p class="note">בחר/י פריטים להתחייבות. המלאי מתעדכן בזמן אמת – פריט שאזל לא יופיע.</p>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label>שם מלא *</label>
+        <input id="name" placeholder="לדוגמה: יובל פרידמן" />
+      </div>
+      <div>
+        <label>טלפון (אופציונלי)</label>
+        <input id="phone" class="ltr" placeholder="05x-xxxxxxx" />
       </div>
     </div>
+  </div>
 
-    <div class="card">
-      <div class="actions">
-        <button class="btn btnGhost" onclick="reload()">רענון רשימה</button>
-        <button class="btn btnPrimary" onclick="submit()">שליחה</button>
-      </div>
-      <p id="status" class="muted"></p>
+  <div class="card">
+    <div class="actions">
+      <button class="btn btnGhost" onclick="reloadItems()">רענון רשימה</button>
+      <button class="btn btnPrimary" onclick="submit()">שליחה</button>
     </div>
+    <p id="status" class="muted"></p>
+  </div>
 
-    <div class="card">
-      <h2 style="font-size:16px; margin:0 0 8px;">פריטים זמינים</h2>
-      <div style="overflow:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>פריט</th>
-              <th>נותר</th>
-              <th>יחידה</th>
-              <th>כמות להתחייבות</th>
-            </tr>
-          </thead>
-          <tbody id="itemsBody"></tbody>
-        </table>
-      </div>
-      <p class="muted">טיפ: אם נשאר 1 ואת/ה לוקח/ת 1 – אחרי השליחה הפריט ייעלם מהרשימה.</p>
+  <div class="card">
+    <h2 style="font-size:16px; margin:0 0 8px;">פריטים זמינים</h2>
+    <div style="overflow:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>פריט</th>
+            <th>נותר</th>
+            <th>יחידה</th>
+            <th>כמות להתחייבות</th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody"></tbody>
+      </table>
     </div>
+    <p class="muted">אם נשאר 1 ואת/ה לוקח/ת 1 – אחרי השליחה הפריט ייעלם מהרשימה.</p>
+  </div>
 
-    <div class="card">
-      <h2 style="font-size:16px; margin:0 0 8px;">הורדת שיבוצים</h2>
-      <div class="actions">
-        <button class="btn btnGhost" onclick="downloadXlsx()">Excel</button>
-        <button class="btn btnGhost" onclick="downloadPdf()">PDF</button>
-      </div>
-      <p class="muted">הקבצים נוצרים כקובץ חדש ב-Drive ומוחזר קישור להורדה.</p>
-      <p id="dl" class="muted"></p>
+  <div class="card">
+    <h2 style="font-size:16px; margin:0 0 8px;">הורדת שיבוצים</h2>
+    <div class="actions">
+      <button class="btn btnGhost" onclick="downloadXlsx()">Excel</button>
+      <button class="btn btnGhost" onclick="downloadPdf()">PDF</button>
     </div>
+    <p class="muted">הקבצים נוצרים כקובץ חדש ב-Drive ומוחזר קישור לפתיחה/הורדה.</p>
+    <p id="dl" class="muted"></p>
+  </div>
 
-    <script>
-      let currentItems = [];
+<script>
+  let currentItems = [];
 
-      function setStatus(msg, kind) {
-        const el = document.getElementById("status");
-        el.className = (kind === "err") ? "err" : (kind === "ok" ? "ok" : "muted");
-        el.textContent = msg || "";
+  function setStatus(msg, kind) {
+    const el = document.getElementById("status");
+    el.className = (kind === "err") ? "err" : (kind === "ok" ? "ok" : "muted");
+    el.textContent = msg || "";
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;","'":"&#39;"
+    }[c]));
+  }
+
+  function render(items) {
+    const body = document.getElementById("itemsBody");
+    body.innerHTML = "";
+    currentItems = items || [];
+
+    for (const it of currentItems) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = \`
+        <td>\${escapeHtml(it.itemName)}</td>
+        <td>\${it.remainingQty}</td>
+        <td>\${escapeHtml(it.unit || "")}</td>
+        <td>
+          <input class="qty ltr" type="number" min="0" step="1"
+                 max="\${it.remainingQty}" data-itemid="\${it.itemId}" placeholder="0" />
+        </td>\`;
+      body.appendChild(tr);
+    }
+
+    setStatus(\`נטענו \${currentItems.length} פריטים זמינים.\`, "ok");
+  }
+
+  function reloadItems() {
+    setStatus("טוען פריטים…");
+    google.script.run
+      .withSuccessHandler(render)
+      .withFailureHandler(err => setStatus(err.message || String(err), "err"))
+      .getAvailableItems();
+  }
+
+  function submit() {
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+
+    const inputs = [...document.querySelectorAll("input[data-itemid]")];
+    const selections = inputs
+      .map(inp => ({ itemId: inp.dataset.itemid, qty: Number(inp.value) }))
+      .filter(x => Number.isFinite(x.qty) && x.qty > 0);
+
+    if (!name) return setStatus("חובה למלא שם מלא.", "err");
+    if (selections.length === 0) return setStatus("בחר/י לפחות פריט אחד עם כמות גדולה מ-0.", "err");
+
+    // client-side max check
+    for (const s of selections) {
+      const it = currentItems.find(x => x.itemId === s.itemId);
+      if (it && s.qty > it.remainingQty) {
+        return setStatus(\`הכמות שבחרת גדולה מהמלאי שנותר עבור "\${it.itemName}".\`, "err");
       }
+    }
 
-      function render(items) {
-        const body = document.getElementById("itemsBody");
-        body.innerHTML = "";
-        currentItems = items;
+    setStatus("שולח…");
+    google.script.run
+      .withSuccessHandler(() => {
+        setStatus("נקלט בהצלחה! הרשימה תתרענן.", "ok");
+        reloadItems();
+      })
+      .withFailureHandler(err => setStatus(err.message || String(err), "err"))
+      .submitAssignment({ name, phone, selections });
+  }
 
-        for (const it of items) {
-          const tr = document.createElement("tr");
+  function downloadXlsx() {
+    document.getElementById("dl").textContent = "מכין קובץ Excel…";
+    google.script.run
+      .withSuccessHandler(res => {
+        document.getElementById("dl").innerHTML = \`Excel מוכן: <a href="\${res.url}" target="_blank">פתח/י</a>\`;
+      })
+      .withFailureHandler(err => {
+        document.getElementById("dl").textContent = "שגיאה: " + (err.message || String(err));
+      })
+      .exportAssignmentsXlsx();
+  }
 
-          tr.innerHTML = `
-            <td>${escapeHtml(it.itemName)}</td>
-            <td>${it.remainingQty}</td>
-            <td>${escapeHtml(it.unit || "")}</td>
-            <td>
-              <input class="qty ltr" type="number" min="0" step="1"
-                     max="${it.remainingQty}" data-itemid="${it.itemId}"
-                     placeholder="0" />
-            </td>
-          `;
-          body.appendChild(tr);
-        }
+  function downloadPdf() {
+    document.getElementById("dl").textContent = "מכין PDF…";
+    google.script.run
+      .withSuccessHandler(res => {
+        document.getElementById("dl").innerHTML = \`PDF מוכן: <a href="\${res.url}" target="_blank">פתח/י</a>\`;
+      })
+      .withFailureHandler(err => {
+        document.getElementById("dl").textContent = "שגיאה: " + (err.message || String(err));
+      })
+      .exportAssignmentsPdf();
+  }
 
-        setStatus(`נטענו ${items.length} פריטים זמינים.`, "ok");
+  reloadItems();
+</script>
+</body>
+</html>`;
+
+  return HtmlService.createHtmlOutput(html)
+    .setTitle("Israeli Family Food Allocation")
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+/** Returns available items (RemainingQty > 0) */
+function getAvailableItems() {
+  const ss = SpreadsheetApp.getActive();
+  const sh = ss.getSheetByName(SHEET_ITEMS);
+  if (!sh) throw new Error('Missing sheet "Items". Run setupItems() once.');
+
+  const values = sh.getDataRange().getValues();
+  const out = [];
+
+  for (let i = 1; i < values.length; i++) {
+    const [itemId, itemName, totalQty, remainingQty, unit] = values[i];
+    if (Number(remainingQty) > 0) {
+      out.push({
+        itemId: String(itemId),
+        itemName: String(itemName),
+        totalQty: Number(totalQty),
+        remainingQty: Number(remainingQty),
+        unit: String(unit || "")
+      });
+    }
+  }
+  return out;
+}
+
+/**
+ * Submit an assignment:
+ * payload = { name, phone, selections: [{itemId, qty}, ...] }
+ * Atomic updates with LockService.
+ */
+function submitAssignment(payload) {
+  validatePayload_(payload);
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(25000);
+
+  try {
+    const ss = SpreadsheetApp.getActive();
+    const shItems = ss.getSheetByName(SHEET_ITEMS);
+    const shAssign = ss.getSheetByName(SHEET_ASSIGN);
+
+    if (!shItems || !shAssign) throw new Error('Missing sheets. Run setupItems() once.');
+
+    const itemsRange = shItems.getDataRange();
+    const items = itemsRange.getValues(); // includes header
+
+    // Index: itemId -> row index in items array
+    const idx = new Map();
+    for (let i = 1; i < items.length; i++) idx.set(String(items[i][0]), i);
+
+    // Validate availability (inside lock)
+    for (const s of payload.selections) {
+      const rowIdx = idx.get(String(s.itemId));
+      if (rowIdx == null) throw new Error(`Item not found: ${s.itemId}`);
+
+      const remaining = Number(items[rowIdx][3]);
+      const qty = Number(s.qty);
+
+      if (!Number.isFinite(qty) || qty <= 0) throw new Error("Invalid quantity.");
+      if (qty > remaining) {
+        const itemName = items[rowIdx][1];
+        throw new Error(`Not enough remaining for "${itemName}". Remaining: ${remaining}`);
       }
+    }
 
-      function reload() {
-        setStatus("טוען פריטים…");
-        google.script.run
-          .withSuccessHandler(render)
-          .withFailureHandler(err => setStatus(err.message || String(err), "err"))
-          .getAvailableItems();
-      }
+    // Apply decrements + log
+    const now = new Date();
+    const rowsToAppend = [];
 
-      function submit() {
-        const name = document.getElementById("name").value.trim();
-        const phone = document.getElementById("phone").value.trim();
+    for (const s of payload.selections) {
+      const rowIdx = idx.get(String(s.itemId));
+      const itemId = String(items[rowIdx][0]);
+      const itemName = String(items[rowIdx][1]);
+      const unit = String(items[rowIdx][4] || "");
+      const qty = Number(s.qty);
 
-        const inputs = [...document.querySelectorAll("input[data-itemid]")];
-        const selections = inputs
-          .map(inp => ({ itemId: inp.dataset.itemid, qty: Number(inp.value) }))
-          .filter(x => Number.isFinite(x.qty) && x.qty > 0);
+      items[rowIdx][3] = Number(items[rowIdx][3]) - qty; // decrement remaining
 
-        if (!name) return setStatus("חובה למלא שם מלא.", "err");
-        if (selections.length === 0) return setStatus("בחר/י לפחות פריט אחד עם כמות גדולה מ-0.", "err");
+      rowsToAppend.push([now, payload.name, payload.phone || "", itemId, itemName, qty, unit]);
+    }
 
-        // client-side max check
-        for (const s of selections) {
-          const it = currentItems.find(x => x.itemId === s.itemId);
-          if (it && s.qty > it.remainingQty) {
-            return setStatus(`הכמות שבחרת גדולה מהמלאי שנותר עבור "${it.itemName}".`, "err");
-          }
-        }
+    itemsRange.setValues(items);
 
-        setStatus("שולח…");
-        google.script.run
-          .withSuccessHandler(() => {
-            setStatus("נקלט בהצלחה! הרשימה תתרענן.", "ok");
-            reload();
-          })
-          .withFailureHandler(err => setStatus(err.message || String(err), "err"))
-          .submitAssignment({ name, phone, selections });
-      }
+    if (rowsToAppend.length) {
+      shAssign.getRange(shAssign.getLastRow() + 1, 1, rowsToAppend.length, rowsToAppend[0].length)
+        .setValues(rowsToAppend);
+    }
 
-      function downloadXlsx() {
-        document.getElementById("dl").textContent = "מכין קובץ Excel…";
-        google.script.run
-          .withSuccessHandler(res => {
-            document.getElementById("dl").innerHTML = `Excel מוכן: <a href="${res.url}" target="_blank">פתח/י</a>`;
-          })
-          .withFailureHandler(err => {
-            document.getElementById("dl").textContent = "שגיאה: " + (err.message || String(err));
-          })
-          .exportAssignmentsXlsx();
-      }
+    return { ok: true };
+  } finally {
+    lock.releaseLock();
+  }
+}
 
-      function downloadPdf() {
-        document.getElementById("dl").textContent = "מכין PDF…";
-        google.script.run
-          .withSuccessHandler(res => {
-            document.getElementById("dl").innerHTML = `PDF מוכן: <a href="${res.url}" target="_blank">פתח/י</a>`;
-          })
-          .withFailureHandler(err => {
-            document.getElementById("dl").textContent = "שגיאה: " + (err.message || String(err));
-          })
-          .exportAssignmentsPdf();
-      }
+function validatePayload_(payload) {
+  if (!payload || typeof payload !== "object") throw new Error("Bad request.");
+  if (!payload.name || String(payload.name).trim().length < 2) throw new Error("Name is required.");
+  if (!Array.isArray(payload.selections) || payload.selections.length === 0) {
+    throw new Error("Choose at least one item.");
+  }
+  for (const s of payload.selections) {
+    if (!s.itemId) throw new Error("Missing itemId.");
+    const q = Number(s.qty);
+    if (!Number.isFinite(q) || q <= 0) throw new Error("Quantity must be positive.");
+  }
+}
 
-      function escapeHtml(s) {
-        return String(s).replace(/[&<>"']/g, c => ({
-          "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
-        }[c]));
-      }
+/** Export Assignments as XLSX, returns Drive file URL */
+function exportAssignmentsXlsx() {
+  const ss = SpreadsheetApp.getActive();
+  const sh = ss.getSheetByName(SHEET_ASSIGN);
+  if (!sh) throw new Error('Missing sheet "Assignments".');
 
-      reload();
-    </script>
-  </body>
-</html>
+  const temp = SpreadsheetApp.create("Assignments Export");
+  const tempSh = temp.getSheets()[0];
+  tempSh.setName("Assignments");
+
+  const data = sh.getDataRange().getValues();
+  if (data.length > 0) tempSh.getRange(1, 1, data.length, data[0].length).setValues(data);
+
+  const file = DriveApp.getFileById(temp.getId());
+  const blob = file.getBlob().getAs(MimeType.MICROSOFT_EXCEL);
+  const exported = DriveApp.createFile(blob).setName("Israeli_Family_Assignments.xlsx");
+
+  DriveApp.getFileById(temp.getId()).setTrashed(true);
+
+  return { ok: true, url: exported.getUrl() };
+}
+
+/** Export Assignments as PDF, returns Drive file URL */
+function exportAssignmentsPdf() {
+  const ss = SpreadsheetApp.getActive();
+  const sh = ss.getSheetByName(SHEET_ASSIGN);
+  if (!sh) throw new Error('Missing sheet "Assignments".');
+
+  const temp = SpreadsheetApp.create("Assignments PDF Export");
+  const tempSh = temp.getSheets()[0];
+  tempSh.setName("Assignments");
+
+  const data = sh.getDataRange().getValues();
+  if (data.length > 0) tempSh.getRange(1, 1, data.length, data[0].length).setValues(data);
+
+  const file = DriveApp.getFileById(temp.getId());
+  const pdfBlob = file.getBlob().getAs(MimeType.PDF);
+  const exported = DriveApp.createFile(pdfBlob).setName("Israeli_Family_Assignments.pdf");
+
+  DriveApp.getFileById(temp.getId()).setTrashed(true);
+
+  return { ok: true, url: exported.getUrl() };
+}
